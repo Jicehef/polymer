@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="ws-element">
+	<style>
+		:host {
+			display: none;
+		}
+	</style>
+	<template>
+		<p>{{toto::p}}</p>
+	</template>
+</dom-module>
+<script type="text/javascript">
+	(function() {
+        Polymer({
+            is: "ws-element",
+            socket: null,
+            properties: {
+                toto: {
+                    type: String,
+                    value: 'Welcome!',
+                    notify: true
+                  },
+                protocol: {
+                    type: String
+                },
+                url: {
+                    type: String
+                }
+            },
+            ready: function () {
+        		var channel = '2.light_data';
+        		socket.on(channel, function(message) {
+        			console.log(message);
+        		});
+            },
+            onError: function (error) {
+                this.fire('onerror', error);
+            },
+            onOpen: function (event) {
+                this.fire('onopen');
+            },
+            onMessage: function (event) {
+                this.fire('onmessage', event.data);
+            },
+            send: function (message) {
+                this.socket.send(message);
+            },
+            close: function () {
+                this.socket.close();
+            }
+        })
+	})();
+</script>
